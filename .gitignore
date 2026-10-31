@@ -1,0 +1,39 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment files & secrets
+.env
+.env.*
+!.env.example
+*.env
+server/.env
+.env.local
+
+# Build outputs
+dist/
+client/dist/
+build/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Python / Virtual Envs
+venv/
+.venv/
+__pycache__/
+*.pyc
+
+# IDE & OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Neon CLI cache
+.neon
