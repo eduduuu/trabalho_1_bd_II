@@ -1,7 +1,7 @@
 {
   "name": "trabalho-bd-2",
   "version": "1.0.0",
-  "description": "UNESP BD II - Graph Database Benchmark System with Adapter Pattern",
+  "description": "UNESP BD II - Graph Database Benchmark System",
   "type": "module",
   "scripts": {
     "build": "cd client && npm install && npm run build && cd ../server && npm install",

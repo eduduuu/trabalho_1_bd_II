@@ -1,8 +1,7 @@
 import React from 'react';
 import { 
   Database, GitFork, Repeat, Trophy, GraduationCap, 
-  Layers, Cpu, Server, Network, ShieldCheck, CheckCircle2,
-  Table, Sparkles, BookOpen, Binary, ArrowRight
+  Sparkles, BookOpen
 } from 'lucide-react';
 
 export function AboutProject() {
@@ -111,7 +110,7 @@ export function AboutProject() {
           <div>
             <h2 className="text-xl font-bold text-white">Sobre o Sistema: Esquema Relacional & Consultas Avançadas</h2>
             <p className="text-xs text-slate-400">
-              Trabalho Prático de Banco de Dados II • UNESP • Modelagem Relacional & NoSQL Ready
+              Trabalho Prático de Banco de Dados II • UNESP • Modelagem Relacional & Análise de Dados
             </p>
           </div>
         </div>
@@ -201,47 +200,6 @@ export function AboutProject() {
               </div>
             );
           })}
-        </div>
-      </div>
-
-      {/* Software Architecture: Adapter Pattern */}
-      <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl space-y-4 pt-6 border-t border-slate-800">
-        <div className="flex items-center gap-2">
-          <Layers className="h-5 w-5 text-indigo-400" />
-          <h3 className="text-lg font-bold text-white">Arquitetura de Software: Padrão Adapter & NoSQL Ready</h3>
-        </div>
-        <p className="text-xs text-slate-400 leading-relaxed">
-          O backend adota o <strong>Padrão de Projeto Adapter (GoF)</strong> para isolar completamente a camada de persistência.
-          Tanto a camada de rotas Express quanto os componentes React comunicam-se exclusivamente através da interface <code className="text-indigo-300 font-mono">IDatabaseAdapter</code>.
-        </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2 text-xs">
-          <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700/60">
-            <h5 className="font-bold text-white flex items-center gap-1.5 mb-1.5">
-              <ShieldCheck className="h-4 w-4 text-emerald-400" /> Contrato Unificado
-            </h5>
-            <p className="text-slate-400">
-              Métodos padronizados (<code className="text-indigo-300">findAll</code>, <code className="text-indigo-300">create</code>, <code className="text-indigo-300">update</code>, <code className="text-indigo-300">executeComplexQuery</code>) que operam indiferente se o banco é relacional ou NoSQL.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700/60">
-            <h5 className="font-bold text-white flex items-center gap-1.5 mb-1.5">
-              <Database className="h-4 w-4 text-cyan-400" /> PostgreSQL (Neon)
-            </h5>
-            <p className="text-slate-400">
-              Implementação <code className="text-indigo-300">PostgresAdapter</code> executando DDL, DML, CTEs, WITH RECURSIVE, DENSE_RANK() e pool de conexões otimizado na nuvem Neon.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-700/60">
-            <h5 className="font-bold text-white flex items-center gap-1.5 mb-1.5">
-              <Binary className="h-4 w-4 text-purple-400" /> Migração NoSQL (Parte 2)
-            </h5>
-            <p className="text-slate-400">
-              Implementação <code className="text-indigo-300">MongoAdapter</code> já estruturada para a Parte 2, traduzindo consultas analíticas para o MongoDB Aggregation Pipeline (<code className="text-indigo-300">$lookup</code>, <code className="text-indigo-300">$graphLookup</code>).
-            </p>
-          </div>
         </div>
       </div>
     </div>

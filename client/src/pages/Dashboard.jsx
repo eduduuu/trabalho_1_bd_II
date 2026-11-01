@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { 
   Trophy, Award, Building, Zap, ArrowRight, 
-  TrendingUp, BarChart3, Layers, CheckCircle2, ShieldCheck
+  TrendingUp, BarChart3, Layers, CheckCircle2, ShieldCheck,
+  ChevronLeft, ChevronRight
 } from 'lucide-react';
 import { api } from '../services/api.js';
 
@@ -32,6 +33,13 @@ export function Dashboard({ onNavigate, status }) {
   const edgeDist = insights?.edgeTypeDistribution || [];
   const langDist = insights?.languageDistribution || [];
   const topDatasets = insights?.topDatasets || [];
+
+  // Pagination for institutions (5 per page)
+  const [instPage, setInstPage] = useState(1);
+  const instPerPage = 5;
+  const filteredInst = topInst.filter(i => parseInt(i.total_pesquisadores, 10) > 0);
+  const totalInstPages = Math.ceil(filteredInst.length / instPerPage) || 1;
+  const paginatedInst = filteredInst.slice((instPage - 1) * instPerPage, instPage * instPerPage);
 
   // Max value calculations for charts
   const maxPesquisadores = Math.max(...(topInst.map(i => parseInt(i.total_pesquisadores, 10)) || [1]), 1);
@@ -72,12 +80,12 @@ export function Dashboard({ onNavigate, status }) {
         <div className="mt-6 pt-6 border-t border-slate-800/80 flex flex-wrap items-center gap-4 text-xs text-slate-400">
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="h-4 w-4 text-emerald-400" />
-            <span>Banco na Nuvem: <strong className="text-slate-200">{status?.adapter || 'Neon PostgreSQL'}</strong></span>
+            <span>Banco de Dados: <strong className="text-slate-200">{status?.adapter || 'PostgreSQL (Neon Cloud)'}</strong></span>
           </div>
           <span className="text-slate-600">•</span>
           <div className="flex items-center gap-1.5">
             <Layers className="h-4 w-4 text-cyan-400" />
-            <span>Arquitetura: <strong className="text-slate-200">Database Adapter Pattern</strong></span>
+            <span>Modelo: <strong className="text-slate-200">Relacional (24 Tabelas)</strong></span>
           </div>
         </div>
       </div>
@@ -215,41 +223,77 @@ export function Dashboard({ onNavigate, status }) {
       {/* Section 2: Gráficos Visuais Comparativos */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Gráfico 1: Instituições com Mais Pesquisadores */}
-        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl">
-          <div className="flex items-center justify-between mb-5">
-            <div>
-              <h3 className="text-base font-bold text-white flex items-center gap-2">
-                <BarChart3 className="h-5 w-5 text-indigo-400" />
-                Instituições com Mais Pesquisadores
-              </h3>
-              <p className="text-xs text-slate-400 mt-0.5">Ranking de pesquisadores por universidade ou centro</p>
+        <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between mb-5">
+              <div>
+                <h3 className="text-base font-bold text-white flex items-center gap-2">
+                  <BarChart3 className="h-5 w-5 text-indigo-400" />
+                  Instituições com Mais Pesquisadores
+                </h3>
+                <p className="text-xs text-slate-400 mt-0.5">Ranking de pesquisadores por universidade ou centro</p>
+              </div>
+
+              {totalInstPages > 1 && (
+                <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                  <span className="font-mono text-[11px] text-slate-500 mr-1">
+                    {instPage} / {totalInstPages}
+                  </span>
+                  <button
+                    onClick={() => setInstPage(p => Math.max(1, p - 1))}
+                    disabled={instPage === 1}
+                    className="p-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed border border-slate-700/60 transition-all"
+                    title="Página Anterior"
+                  >
+                    <ChevronLeft className="h-3.5 w-3.5" />
+                  </button>
+                  <button
+                    onClick={() => setInstPage(p => Math.min(totalInstPages, p + 1))}
+                    disabled={instPage === totalInstPages}
+                    className="p-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 disabled:opacity-30 disabled:cursor-not-allowed border border-slate-700/60 transition-all"
+                    title="Próxima Página"
+                  >
+                    <ChevronRight className="h-3.5 w-3.5" />
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="space-y-3.5">
+              {paginatedInst.map((inst, i) => {
+                const count = parseInt(inst.total_pesquisadores, 10);
+                const percentage = Math.round((count / maxPesquisadores) * 100);
+
+                return (
+                  <div key={i} className="space-y-1.5">
+                    <div className="flex justify-between items-center text-xs">
+                      <span className="font-medium text-slate-200 flex items-center gap-1.5">
+                        <span className="font-mono text-[10px] text-slate-500 w-4 text-right">
+                          {(instPage - 1) * instPerPage + i + 1}.
+                        </span>
+                        {inst.instituicao}
+                      </span>
+                      <span className="font-semibold text-indigo-300 font-mono">
+                        {count} {count === 1 ? 'pesquisador' : 'pesquisadores'}
+                      </span>
+                    </div>
+                    {/* Progress Bar Chart */}
+                    <div className="w-full h-2 bg-slate-800 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-gradient-to-r from-indigo-500 to-cyan-400 rounded-full transition-all duration-500"
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                    <p className="text-[10px] text-slate-500 pl-5.5">{inst.localizacao}</p>
+                  </div>
+                );
+              })}
             </div>
           </div>
 
-          <div className="space-y-3.5">
-            {topInst.filter(i => parseInt(i.total_pesquisadores, 10) > 0).map((inst, i) => {
-              const count = parseInt(inst.total_pesquisadores, 10);
-              const percentage = Math.round((count / maxPesquisadores) * 100);
-
-              return (
-                <div key={i} className="space-y-1.5">
-                  <div className="flex justify-between items-center text-xs">
-                    <span className="font-medium text-slate-200">{inst.instituicao}</span>
-                    <span className="font-semibold text-indigo-300 font-mono">
-                      {count} {count === 1 ? 'pesquisador' : 'pesquisadores'}
-                    </span>
-                  </div>
-                  {/* Progress Bar Chart */}
-                  <div className="w-full h-2.5 bg-slate-800 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-gradient-to-r from-indigo-500 to-cyan-400 rounded-full transition-all duration-500"
-                      style={{ width: `${percentage}%` }}
-                    />
-                  </div>
-                  <p className="text-[10px] text-slate-500">{inst.localizacao}</p>
-                </div>
-              );
-            })}
+          <div className="mt-4 pt-3 border-t border-slate-800/80 flex items-center justify-between text-[11px] text-slate-500 font-mono">
+            <span>Total: {filteredInst.length} instituições com pesquisadores</span>
+            <span>Exibindo 5 por página</span>
           </div>
         </div>
 
