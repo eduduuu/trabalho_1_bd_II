@@ -178,6 +178,31 @@ Executa a suíte de **14 testes automatizados de ponta a ponta**, validando cone
 
 ---
 
+## ☁️ Hospedagem na Nuvem (Live Deployment no Render)
+
+O projeto já está estruturado para execução full-stack unificada em nuvem:
+- **Banco de Dados Relacional**: Hospedado na nuvem no **Neon PostgreSQL** (região AWS São Paulo `aws-sa-east-1`), já provisionado e populado.
+- **Aplicação Web (React + Express)**: Pronta para rodar como **Web Service gratuito** no **[Render](https://render.com)** (o Express já serve a API REST e o bundle estático do React compilado pelo Vite).
+
+### Passo a Passo para Publicar no Render:
+1. Acesse [render.com](https://render.com) e faça login com sua conta do GitHub.
+2. No painel, clique em **New +** ➔ **Web Service**.
+3. Escolha o repositório **`eduduuu/trabalho_1_bd_II`** e clique em **Connect**.
+4. Configure os campos:
+   - **Name**: `graphbench-unesp` (ou à sua escolha)
+   - **Runtime**: `Node`
+   - **Build Command**: `npm run build`
+   - **Start Command**: `npm start`
+   - **Instance Type**: `Free`
+5. Na seção **Environment Variables**, adicione:
+   - **`DB_ADAPTER`**: `postgres`
+   - **`DATABASE_URL`**: `postgresql://neondb_owner:npg_AJeqZYok12WB@ep-late-art-b6g06a0g-pooler.c-2.sa-east-1.aws.neon.tech/neondb?sslmode=require`
+6. Clique em **Deploy Web Service**.
+   - O Render executará o build do React, instalará as dependências e subirá o servidor Express.
+   - Ao concluir, você receberá a URL pública com SSL ativo (ex: `https://graphbench-unesp.onrender.com`) para enviar ao professor!
+
+---
+
 ## 📁 Estrutura de Diretórios
 
 ```
