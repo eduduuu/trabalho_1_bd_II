@@ -103,6 +103,22 @@ export function ComplexQueries() {
     },
   ];
 
+  const [lookups, setLookups] = useState({});
+
+  useEffect(() => {
+    async function loadLookups() {
+      try {
+        const res = await api.getLookups();
+        if (res.success) {
+          setLookups(res.data);
+        }
+      } catch (err) {
+        console.error('Failed to load lookups:', err);
+      }
+    }
+    loadLookups();
+  }, []);
+
   useEffect(() => {
     runQuery(activeQuery, filters);
   }, [activeQuery]);
@@ -217,13 +233,21 @@ export function ComplexQueries() {
 
           {activeQuery === 'citation_loop_detection' && (
             <>
-              <input
-                type="text"
-                placeholder="Filtrar por Artigo (opcional)"
-                value={filters.artigo}
-                onChange={(e) => setFilters({ ...filters, artigo: e.target.value })}
-                className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              />
+              <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                <span>Artigo Origem:</span>
+                <select
+                  value={filters.artigo}
+                  onChange={(e) => setFilters({ ...filters, artigo: e.target.value })}
+                  className="max-w-[260px] px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                >
+                  <option value="">Todos os Artigos</option>
+                  {lookups.artigo?.map((a) => (
+                    <option key={a.id} value={a.titulo || a.label}>
+                      {a.titulo || a.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div className="flex items-center gap-1.5 text-xs text-slate-400">
                 <span>Passos máx:</span>
                 <select
@@ -242,13 +266,21 @@ export function ComplexQueries() {
 
           {activeQuery === 'dataset_framework_ranking' && (
             <>
-              <input
-                type="text"
-                placeholder="Dataset (ex: LiveJournal)"
-                value={filters.dataset}
-                onChange={(e) => setFilters({ ...filters, dataset: e.target.value })}
-                className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              />
+              <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                <span>Dataset:</span>
+                <select
+                  value={filters.dataset}
+                  onChange={(e) => setFilters({ ...filters, dataset: e.target.value })}
+                  className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                >
+                  <option value="">Todos os Datasets</option>
+                  {lookups.dataset?.map((d) => (
+                    <option key={d.id} value={d.nome || d.label}>
+                      {d.nome || d.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
               <div className="flex items-center gap-1.5 text-xs text-slate-400">
                 <span>Mín. Citações (HAVING):</span>
                 <input
@@ -263,62 +295,110 @@ export function ComplexQueries() {
           )}
 
           {activeQuery === 'institution_researcher_productivity' && (
-            <input
-              type="text"
-              placeholder="Área de Pesquisa (HAVING) (ex: Grafos, Memória)"
-              value={filters.areaPesquisa}
-              onChange={(e) => setFilters({ ...filters, areaPesquisa: e.target.value })}
-              className="w-72 px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            />
+            <div className="flex items-center gap-1.5 text-xs text-slate-400">
+              <span>Área de Pesquisa (HAVING):</span>
+              <select
+                value={filters.areaPesquisa}
+                onChange={(e) => setFilters({ ...filters, areaPesquisa: e.target.value })}
+                className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              >
+                <option value="">Todas as Áreas de Pesquisa</option>
+                {lookups.areas_pesquisa?.map((area) => (
+                  <option key={area} value={area}>
+                    {area}
+                  </option>
+                ))}
+              </select>
+            </div>
           )}
 
           {(activeQuery === 'citation_recursive_network' || activeQuery === 'benchmark_ranking') && (
             <>
-              <input
-                type="text"
-                placeholder="Framework (ex: DGAP)"
-                value={filters.framework}
-                onChange={(e) => setFilters({ ...filters, framework: e.target.value })}
-                className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              />
-              <input
-                type="text"
-                placeholder="Algoritmo (ex: PageRank)"
-                value={filters.algoritmo}
-                onChange={(e) => setFilters({ ...filters, algoritmo: e.target.value })}
-                className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-              />
+              <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                <span>Framework:</span>
+                <select
+                  value={filters.framework}
+                  onChange={(e) => setFilters({ ...filters, framework: e.target.value })}
+                  className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                >
+                  <option value="">Todos os Frameworks</option>
+                  {lookups.framework?.map((f) => (
+                    <option key={f.id} value={f.nome || f.label}>
+                      {f.nome || f.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-slate-400">
+                <span>Algoritmo:</span>
+                <select
+                  value={filters.algoritmo}
+                  onChange={(e) => setFilters({ ...filters, algoritmo: e.target.value })}
+                  className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+                >
+                  <option value="">Todos os Algoritmos</option>
+                  {lookups.algoritmo?.map((a) => (
+                    <option key={a.id} value={a.nome || a.label}>
+                      {a.nome || a.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </>
           )}
 
           {activeQuery === 'researchers_network' && (
-            <input
-              type="text"
-              placeholder="Filtrar por Instituição (ex: MIT)"
-              value={filters.instituicao}
-              onChange={(e) => setFilters({ ...filters, instituicao: e.target.value })}
-              className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            />
+            <div className="flex items-center gap-1.5 text-xs text-slate-400">
+              <span>Instituição:</span>
+              <select
+                value={filters.instituicao}
+                onChange={(e) => setFilters({ ...filters, instituicao: e.target.value })}
+                className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              >
+                <option value="">Todas as Instituições</option>
+                {lookups.instituicao?.map((i) => (
+                  <option key={i.id} value={i.nome || i.label}>
+                    {i.nome || i.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           )}
 
           {activeQuery === 'industry_adoption' && (
-            <input
-              type="text"
-              placeholder="Filtrar por Empresa (ex: Google)"
-              value={filters.empresa}
-              onChange={(e) => setFilters({ ...filters, empresa: e.target.value })}
-              className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            />
+            <div className="flex items-center gap-1.5 text-xs text-slate-400">
+              <span>Empresa:</span>
+              <select
+                value={filters.empresa}
+                onChange={(e) => setFilters({ ...filters, empresa: e.target.value })}
+                className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              >
+                <option value="">Todas as Empresas</option>
+                {lookups.empresas?.map((emp) => (
+                  <option key={emp} value={emp}>
+                    {emp}
+                  </option>
+                ))}
+              </select>
+            </div>
           )}
 
           {activeQuery === 'optimization_matrix' && (
-            <input
-              type="text"
-              placeholder="Framework (ex: XPGraph)"
-              value={filters.framework}
-              onChange={(e) => setFilters({ ...filters, framework: e.target.value })}
-              className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            />
+            <div className="flex items-center gap-1.5 text-xs text-slate-400">
+              <span>Framework:</span>
+              <select
+                value={filters.framework}
+                onChange={(e) => setFilters({ ...filters, framework: e.target.value })}
+                className="px-3 py-1.5 bg-slate-800 border border-slate-700 rounded-lg text-xs text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+              >
+                <option value="">Todos os Frameworks</option>
+                {lookups.framework?.map((f) => (
+                  <option key={f.id} value={f.nome || f.label}>
+                    {f.nome || f.label}
+                  </option>
+                ))}
+              </select>
+            </div>
           )}
 
           <button

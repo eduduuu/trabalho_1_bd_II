@@ -398,33 +398,45 @@ export class PostgresAdapter extends IDatabaseAdapter {
     const lookups = {};
 
     const [
-      inst, pes, fw, alg, ds, amb, art, vei, comp, tec, est, app, impl, pesq
+      inst, pes, fw, alg, ds, amb, art, vei, comp, tec, est, app, impl, pesq, areasPesquisa, empresas
     ] = await Promise.all([
-      this.pool.query(`SELECT id, nome AS label FROM Instituicao ORDER BY nome;`),
-      this.pool.query(`SELECT id, nome || ' (' || cargo || ')' AS label FROM Pessoa ORDER BY nome;`),
-      this.pool.query(`SELECT id, nome || ' (' || linguagem || ')' AS label FROM Framework ORDER BY nome;`),
-      this.pool.query(`SELECT id, nome AS label FROM Algoritmo ORDER BY nome;`),
-      this.pool.query(`SELECT id, nome || ' (' || area || ')' AS label FROM Dataset ORDER BY nome;`),
-      this.pool.query(`SELECT id, nome || ' (' || processador || ')' AS label FROM Ambiente_de_Execucao ORDER BY nome;`),
-      this.pool.query(`SELECT id, titulo AS label FROM Artigo ORDER BY titulo;`),
-      this.pool.query(`SELECT id, nome || ' - ' || edicao AS label FROM Veiculo ORDER BY nome;`),
-      this.pool.query(`SELECT id, tipo_alocacao || ' (' || complexidade_busca || ' busca)' AS label FROM Complexidade ORDER BY tipo_alocacao;`),
-      this.pool.query(`SELECT id, nome || ' (' || metodo || ')' AS label FROM Tecnica_de_Otimizacao ORDER BY nome;`),
-      this.pool.query(`SELECT id, nome AS label FROM Estrutura_de_Dados ORDER BY nome;`),
-      this.pool.query(`SELECT id, empresa || ' - ' || problema_resolvido AS label FROM Aplicacao ORDER BY empresa;`),
+      this.pool.query(`SELECT id, nome AS label, nome FROM Instituicao ORDER BY nome;`),
+      this.pool.query(`SELECT id, nome || ' (' || cargo || ')' AS label, nome FROM Pessoa ORDER BY nome;`),
+      this.pool.query(`SELECT id, nome || ' (' || linguagem || ')' AS label, nome FROM Framework ORDER BY nome;`),
+      this.pool.query(`SELECT id, nome AS label, nome FROM Algoritmo ORDER BY nome;`),
+      this.pool.query(`SELECT id, nome || ' (' || area || ')' AS label, nome FROM Dataset ORDER BY nome;`),
+      this.pool.query(`SELECT id, nome || ' (' || processador || ')' AS label, nome FROM Ambiente_de_Execucao ORDER BY nome;`),
+      this.pool.query(`SELECT id, titulo AS label, titulo, doi FROM Artigo ORDER BY titulo;`),
+      this.pool.query(`SELECT id, nome || ' - ' || edicao AS label, nome FROM Veiculo ORDER BY nome;`),
+      this.pool.query(`SELECT id, tipo_alocacao || ' (' || complexidade_busca || ' busca)' AS label, tipo_alocacao AS nome FROM Complexidade ORDER BY tipo_alocacao;`),
+      this.pool.query(`SELECT id, nome || ' (' || metodo || ')' AS label, nome FROM Tecnica_de_Otimizacao ORDER BY nome;`),
+      this.pool.query(`SELECT id, nome AS label, nome FROM Estrutura_de_Dados ORDER BY nome;`),
+      this.pool.query(`SELECT id, empresa || ' - ' || problema_resolvido AS label, empresa FROM Aplicacao ORDER BY empresa;`),
       this.pool.query(`
-        SELECT i.id, f.nome || ' + ' || a.nome AS label 
+        SELECT i.id, f.nome || ' + ' || a.nome AS label, f.nome AS framework_nome, a.nome AS algoritmo_nome
         FROM Implementacao i 
         JOIN Framework f ON i.framework_id = f.id 
         JOIN Algoritmo a ON i.algoritmo_id = a.id 
         ORDER BY f.nome;
       `),
       this.pool.query(`
-        SELECT p.id, pes.nome || ' (' || inst.nome || ')' AS label 
+        SELECT p.id, pes.nome || ' (' || inst.nome || ')' AS label, pes.nome 
         FROM Pesquisador p 
         JOIN Pessoa pes ON p.pessoa_id = pes.id 
         JOIN Instituicao inst ON p.instituicao_id = inst.id 
         ORDER BY pes.nome;
+      `),
+      this.pool.query(`
+        SELECT DISTINCT area_pesquisa 
+        FROM Pesquisador 
+        WHERE area_pesquisa IS NOT NULL AND area_pesquisa <> '' 
+        ORDER BY area_pesquisa;
+      `),
+      this.pool.query(`
+        SELECT DISTINCT empresa 
+        FROM Aplicacao 
+        WHERE empresa IS NOT NULL AND empresa <> '' 
+        ORDER BY empresa;
       `),
     ]);
 
@@ -442,6 +454,8 @@ export class PostgresAdapter extends IDatabaseAdapter {
     lookups['aplicacao'] = app.rows;
     lookups['implementacao'] = impl.rows;
     lookups['pesquisador'] = pesq.rows;
+    lookups['areas_pesquisa'] = areasPesquisa.rows.map(r => r.area_pesquisa);
+    lookups['empresas'] = empresas.rows.map(r => r.empresa);
 
     return lookups;
   }
