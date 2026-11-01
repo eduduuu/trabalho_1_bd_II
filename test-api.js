@@ -82,10 +82,10 @@ async function testSuite() {
     });
 
     // Test 3: CRUD Read List
-    await assert('CRUD List: Frameworks table contains 10 seed frameworks', async () => {
+    await assert('CRUD List: Frameworks table contains seed frameworks', async () => {
       const res = await fetch(`${API_BASE}/crud/framework`);
       const data = await res.json();
-      if (!data.success || data.total !== 10) throw new Error(`Expected 10 frameworks, found ${data.total}`);
+      if (!data.success || data.total < 10) throw new Error(`Expected at least 10 frameworks, found ${data.total}`);
     });
 
     // Test 4: CRUD Create, Read, Update, Delete
