@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: graphbench-unesp
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_VERSION
+        value: 20.18.0
+      - key: DB_ADAPTER
+        value: postgres
+      - key: DATABASE_URL
+        sync: false

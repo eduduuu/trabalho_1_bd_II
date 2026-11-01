@@ -4,6 +4,7 @@
   "description": "UNESP BD II - Graph Database Benchmark System with Adapter Pattern",
   "type": "module",
   "scripts": {
+    "build": "cd client && npm install && npm run build && cd ../server && npm install",
     "start": "cd server && npm start",
     "dev:server": "cd server && npm run dev",
     "dev:client": "cd client && npm run dev",
