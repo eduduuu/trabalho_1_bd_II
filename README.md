@@ -57,6 +57,25 @@ O banco de dados e composto por 24 tabelas distribuidas em 4 dominios:
 
 ---
 
+## Diagramas do Projeto (MER e ER)
+
+Os diagramas oficiais desenvolvidos para a modelagem do banco de dados relacional estao disponiveis no diretorio [`diagramas/`](./diagramas) e podem ser consultados e baixados diretamente na interface web (pagina "Sobre o Projeto"):
+
+1. **Diagrama Conceitual (MER)**:
+   - Arquivo original em PDF: [`diagramas/Diagrama_MER.pdf`](./diagramas/Diagrama_MER.pdf)
+   - Pre-visualizacao em imagem: [`diagramas/Diagrama_MER.png`](./diagramas/Diagrama_MER.png)
+   - Especifica entidades, atributos, cardinalidades e os relacionamentos do ecossistema, incluindo o auto-relacionamento reflexivo de citacoes e o atributo de contagem de citacoes em Artigo.
+
+![Diagrama Conceitual MER](./diagramas/Diagrama_MER.png)
+
+2. **Diagrama Logico Relacional (ER)**:
+   - Arquivo original em imagem: [`diagramas/Diagrama_ER.jpeg`](./diagramas/Diagrama_ER.jpeg)
+   - Especifica o mapeamento das 24 tabelas relacionais com chaves primarias (PK), chaves estrangeiras (FK), tipos de dados, tabela associativa reflexiva (`Artigo_Artigo`) e integridade referencial.
+
+![Diagrama Logico Relacional ER](./diagramas/Diagrama_ER.jpeg)
+
+---
+
 ## Consultas Avancadas em SQL
 
 Todas as consultas analiticas estao documentadas e disponiveis com scripts SQL individuais na pasta [`consultas_avancadas/`](./consultas_avancadas):
@@ -177,6 +196,10 @@ O projeto esta estruturado para execucao full-stack unificada em nuvem:
 
 ```
 trabalho_1_bd_II/
+├── diagramas/                  # Diagramas oficiais Conceitual (MER) e Logico (ER)
+│   ├── Diagrama_MER.pdf        # Modelo Entidade-Relacionamento original em PDF
+│   ├── Diagrama_MER.png        # Renderizacao grafica de alta resolucao do MER
+│   └── Diagrama_ER.jpeg        # Diagrama Logico Relacional com as 24 tabelas
 ├── client/                     # Frontend SPA em React (Vite + Tailwind CSS)
 │   ├── src/
 │   │   ├── components/         # Navbar, Layout e componentes modulares

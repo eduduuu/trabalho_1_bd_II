@@ -1,10 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   Database, GitFork, Repeat, Trophy, GraduationCap, 
-  Sparkles, BookOpen
+  Sparkles, BookOpen, FileText, Image as ImageIcon, ExternalLink, Download, Maximize2, X
 } from 'lucide-react';
 
 export function AboutProject() {
+  const [selectedDiagram, setSelectedDiagram] = useState(null);
   const tableDomains = [
     {
       domain: 'Produção Científica & Autoria',
@@ -116,8 +117,158 @@ export function AboutProject() {
         </div>
       </div>
 
-      {/* Database Schema Section */}
+      {/* Diagrams Section */}
       <div className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
+            <BookOpen className="h-5 w-5 text-cyan-400" />
+            <h3 className="text-lg font-bold text-white">Diagramas do Projeto: Conceitual (MER) e Lógico (ER)</h3>
+          </div>
+          <span className="text-xs text-slate-400 bg-slate-800/80 px-3 py-1 rounded-lg border border-slate-700/60 w-fit">
+            Arquivos Originais Disponíveis
+          </span>
+        </div>
+        <p className="text-xs text-slate-400 leading-relaxed">
+          Os diagramas oficiais desenvolvidos para a modelagem do banco de dados relacional. Clique nos cartões para ampliar em tela cheia ou utilize os botões para visualizar e baixar os arquivos originais em PDF ou imagem.
+        </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+          {/* Card 1: Diagrama MER (Conceitual) */}
+          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between hover:border-slate-700 transition-all">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="p-2 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 text-white shadow-md">
+                    <FileText className="h-4 w-4" />
+                  </span>
+                  <div>
+                    <h4 className="text-sm font-bold text-white">Diagrama Conceitual (MER)</h4>
+                    <span className="text-[11px] text-slate-400">Modelo Entidade-Relacionamento • Formato PDF</span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-cyan-500/10 text-cyan-400 border border-cyan-500/20">
+                  Conceitual
+                </span>
+              </div>
+
+              {/* Thumbnail Preview */}
+              <div 
+                onClick={() => setSelectedDiagram({
+                  title: 'Diagrama Conceitual (MER)',
+                  type: 'image',
+                  src: '/diagramas/Diagrama_MER.png',
+                  downloadUrl: '/diagramas/Diagrama_MER.pdf',
+                  downloadName: 'Diagrama_MER.pdf'
+                })}
+                className="relative group cursor-pointer overflow-hidden rounded-xl border border-slate-800 bg-slate-950/80 mb-4 h-60 flex items-center justify-center p-2"
+              >
+                <img 
+                  src="/diagramas/Diagrama_MER.png" 
+                  alt="Pré-visualização do Diagrama MER" 
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white text-xs font-semibold">
+                  <Maximize2 className="h-4 w-4 text-cyan-400" />
+                  <span>Clique para Ampliar</span>
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-400 mb-4">
+                Define todas as entidades, atributos, cardinalidades e os relacionamentos do ecossistema, incluindo o auto-relacionamento reflexivo de citações e o atributo de citações em Artigo.
+              </p>
+            </div>
+
+            <div className="pt-3 border-t border-slate-800 flex items-center gap-2">
+              <a
+                href="/diagramas/Diagrama_MER.pdf"
+                target="_blank"
+                rel="noreferrer"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-all"
+              >
+                <ExternalLink className="h-3.5 w-3.5 text-cyan-400" />
+                Visualizar PDF
+              </a>
+              <a
+                href="/diagramas/Diagrama_MER.pdf"
+                download="Diagrama_MER.pdf"
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium shadow transition-all"
+              >
+                <Download className="h-3.5 w-3.5" />
+                Baixar PDF
+              </a>
+            </div>
+          </div>
+
+          {/* Card 2: Diagrama ER (Lógico Relacional) */}
+          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-5 shadow-xl flex flex-col justify-between hover:border-slate-700 transition-all">
+            <div>
+              <div className="flex items-center justify-between mb-3">
+                <div className="flex items-center gap-2.5">
+                  <span className="p-2 rounded-xl bg-gradient-to-tr from-purple-500 to-indigo-600 text-white shadow-md">
+                    <ImageIcon className="h-4 w-4" />
+                  </span>
+                  <div>
+                    <h4 className="text-sm font-bold text-white">Diagrama Lógico Relacional (ER)</h4>
+                    <span className="text-[11px] text-slate-400">Esquema Físico / Tabelas • Formato JPEG</span>
+                  </div>
+                </div>
+                <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-purple-500/10 text-purple-400 border border-purple-500/20">
+                  Lógico / Físico
+                </span>
+              </div>
+
+              {/* Thumbnail Preview */}
+              <div 
+                onClick={() => setSelectedDiagram({
+                  title: 'Diagrama Lógico Relacional (ER)',
+                  type: 'image',
+                  src: '/diagramas/Diagrama_ER.jpeg',
+                  downloadUrl: '/diagramas/Diagrama_ER.jpeg',
+                  downloadName: 'Diagrama_ER.jpeg'
+                })}
+                className="relative group cursor-pointer overflow-hidden rounded-xl border border-slate-800 bg-slate-950/80 mb-4 h-60 flex items-center justify-center p-2"
+              >
+                <img 
+                  src="/diagramas/Diagrama_ER.jpeg" 
+                  alt="Pré-visualização do Diagrama ER" 
+                  className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-slate-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 text-white text-xs font-semibold">
+                  <Maximize2 className="h-4 w-4 text-purple-400" />
+                  <span>Clique para Ampliar</span>
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-400 mb-4">
+                Mapeamento das 24 tabelas relacionais com chaves primárias (PK), chaves estrangeiras (FK), tipos de dados, tabela associativa de citações (<code className="text-indigo-300">Artigo_Artigo</code>) e restrições de integridade.
+              </p>
+            </div>
+
+            <div className="pt-3 border-t border-slate-800 flex items-center gap-2">
+              <a
+                href="/diagramas/Diagrama_ER.jpeg"
+                target="_blank"
+                rel="noreferrer"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-all"
+              >
+                <ExternalLink className="h-3.5 w-3.5 text-purple-400" />
+                Visualizar JPEG
+              </a>
+              <a
+                href="/diagramas/Diagrama_ER.jpeg"
+                download="Diagrama_ER.jpeg"
+                className="inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium shadow transition-all"
+              >
+                <Download className="h-3.5 w-3.5" />
+                Baixar JPEG
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Database Schema Section */}
+      <div className="space-y-4 pt-6 border-t border-slate-800">
         <div className="flex items-center gap-2">
           <Database className="h-5 w-5 text-indigo-400" />
           <h3 className="text-lg font-bold text-white">Esquema Relacional (24 Tabelas Modeladas)</h3>
@@ -202,6 +353,60 @@ export function AboutProject() {
           })}
         </div>
       </div>
+
+      {/* Lightbox / Modal for Diagram Preview */}
+      {selectedDiagram && (
+        <div 
+          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
+          onClick={() => setSelectedDiagram(null)}
+        >
+          <div 
+            className="relative max-w-6xl w-full max-h-[90vh] bg-slate-900 border border-slate-700 rounded-2xl p-4 flex flex-col shadow-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between pb-3 border-b border-slate-800">
+              <div className="flex items-center gap-2">
+                <BookOpen className="h-5 w-5 text-cyan-400" />
+                <h4 className="text-base font-bold text-white">{selectedDiagram.title}</h4>
+              </div>
+              <div className="flex items-center gap-3">
+                <a
+                  href={selectedDiagram.downloadUrl}
+                  download={selectedDiagram.downloadName}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-medium transition-all"
+                >
+                  <Download className="h-3.5 w-3.5" />
+                  Baixar Arquivo
+                </a>
+                <a
+                  href={selectedDiagram.downloadUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-all"
+                >
+                  <ExternalLink className="h-3.5 w-3.5 text-cyan-400" />
+                  Abrir Original
+                </a>
+                <button
+                  type="button"
+                  onClick={() => setSelectedDiagram(null)}
+                  className="p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+
+            <div className="flex-1 overflow-auto p-2 flex items-center justify-center bg-slate-950/60 rounded-xl mt-3 min-h-[50vh]">
+              <img
+                src={selectedDiagram.src}
+                alt={selectedDiagram.title}
+                className="max-h-[75vh] w-auto max-w-full object-contain rounded-lg shadow-lg"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
